@@ -1,0 +1,4 @@
+- insert:
+    - id: dsh-test-workbench
+      name: 'dsh-test-workbench'
+      config: {}

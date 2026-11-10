@@ -1,0 +1,16 @@
+node_modules/
+.ai-test/
+coverage/
+*.tgz
+*.log
+.env
+.env.*
+.npmrc
+.DS_Store
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.mp4
+*.webm
+*.pdf

@@ -1,0 +1,19 @@
+{
+  "name": "dsh-test-workbench",
+  "version": "0.1.0",
+  "description": "DSH test execution workbench: manual and AI results, step evidence, execution history, and reports",
+  "license": "MIT",
+  "author": "lichufeng123",
+  "type": "module",
+  "repository": {"type": "git", "url": "git+https://github.com/lichufeng123/dsh-test-workbench.git"},
+  "homepage": "https://github.com/lichufeng123/dsh-test-workbench#readme",
+  "bugs": {"url": "https://github.com/lichufeng123/dsh-test-workbench/issues"},
+  "keywords": ["dsh-plugin", "deepseek-harness", "testing", "test-management", "evidence", "quality-assurance"],
+  "exports": {".": "./index.js", "./client": "./client.js", "./core": "./core.js", "./package.json": "./package.json"},
+  "files": ["index.js", "config.js", "client.js", "core.js", "ai.js", "jobs.js", "report-publisher.js", "report-recovery.js", "cordis.patch.yml", "examples", "docs/API.md", "README.zh-CN.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"],
+  "dsh": {"bundle": {"patch": "./cordis.patch.yml"}, "client": {"platform": "web", "inject": ["@deepseek-ai/dsh-client-ui-sidebar-right", "@deepseek-ai/dsh-client-ui-conversation"]}},
+  "scripts": {"check": "node --check index.js && node --check config.js && node --check core.js && node --check ai.js && node --check jobs.js && node --check client.js && node --check report-publisher.js && node --check report-recovery.js", "test": "node --test test/*.test.js", "validate": "node scripts/validate-package.mjs"},
+  "engines": {"node": ">=22", "dsh": ">=0.2.2-rc.1"},
+  "dependencies": {"@deepseek-ai/schemastery": "^3.19.0"},
+  "publishConfig": {"access": "public", "registry": "https://registry.npmjs.org"}
+}

@@ -1,0 +1,38 @@
+{
+  "requirement_id": "REQ-SETTINGS-DEMO",
+  "title": "Synthetic settings page / 合成设置页示例",
+  "cases": [
+    {
+      "id": "C1",
+      "title": "Save a display preference / 保存显示偏好",
+      "priority": "P0",
+      "kind": "smoke",
+      "preconditions": "Use a synthetic demo account and a test-only settings page. / 使用合成演示账号与专用测试设置页。",
+      "fixture": "Synthetic account demo-user; initial preference: compact. / 合成账号 demo-user，初始偏好 compact。",
+      "steps": [
+        {"action": "Open the settings page. / 打开设置页。", "expected": "The initial preference is compact. / 初始偏好为 compact。"},
+        {"action": "Select comfortable and save. / 选择 comfortable 并保存。", "expected": "A successful save is visible. / 显示保存成功。"}
+      ],
+      "expected_result": "The saved preference for demo-user is comfortable. / demo-user 的保存偏好为 comfortable。",
+      "oracle": {"type": "independent_fixture_record", "reference": "Synthetic test fixture specification, preference mapping v1", "expected": {"account": "demo-user", "preference": "comfortable"}},
+      "covered_assertion_ids": ["A-SETTINGS-SAVE"],
+      "dependencies": []
+    },
+    {
+      "id": "C2",
+      "title": "Reload the saved preference / 刷新后读取保存偏好",
+      "priority": "P1",
+      "preconditions": "Complete C1 in this round. / 本轮先完成 C1。",
+      "fixture": "The same synthetic demo-user fixture as C1. / 与 C1 相同的合成 demo-user。",
+      "steps": [
+        {"action": "Reload the settings page. / 刷新设置页。", "expected": "comfortable remains selected. / 仍选中 comfortable。"},
+        {"action": "Open another view and return to settings. / 切换其他视图后返回设置页。", "expected": "The saved preference remains visible. / 仍显示保存的偏好。"}
+      ],
+      "expected_result": "The displayed value matches the independent synthetic preference record. / 展示值与独立合成偏好记录一致。",
+      "oracle": ["Expected preference comes from the synthetic fixture contract, not the value shown by the page.", "预期来自合成 Fixture 合同，不能用页面自己的显示值确定预期。"],
+      "source": {"document": "Synthetic settings requirements", "section": "Persistence"},
+      "covered_assertion_ids": ["A-SETTINGS-PERSIST"],
+      "dependencies": ["C1"]
+    }
+  ]
+}
