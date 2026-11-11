@@ -14,3 +14,11 @@ coverage/
 *.mp4
 *.webm
 *.pdf
+
+# Reviewed public showcase assets only; runtime media stays ignored.
+!docs/images/cover.png
+!docs/images/01-overview.png
+!docs/images/02-evidence.png
+!docs/images/03-history.png
+!docs/images/04-report.png
+!docs/images/social-preview.png

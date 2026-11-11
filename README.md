@@ -1,96 +1,100 @@
+![DSH Test Workbench — test results, evidence, and reports in one place](https://raw.githubusercontent.com/lichufeng123/dsh-test-workbench/main/docs/images/cover.png)
+
 # DSH Test Workbench
 
-[简体中文](README.zh-CN.md) · [API](docs/API.md) · [Contributing](CONTRIBUTING.md)
+**Keep the expectation, the actual result, the screenshot, and the next attempt together.**
 
-A manual test execution workbench in the DeepSeek Harness sidebar. Import cases, create a test round, record actual results and step evidence, track scope changes, and generate a report from the saved records.
+[简体中文](README.zh-CN.md) · [npm](https://www.npmjs.com/package/dsh-test-workbench) · [Plugin marketplace](https://deepseek1024.com/plugins/lichufeng123/dsh-test-workbench) · [Configuration](docs/configuration.md)
 
-Version 0.1.0 targets DSH `>=0.2.2-rc.1` and Node.js `>=22`. The interface and generated report labels currently use Simplified Chinese.
+A manual test execution workbench inside the DeepSeek Harness sidebar. QA records what happened, developers can follow the steps and evidence, and AI can help organize the round and summarize its saved results. The context stays with the case when a test fails, gets retried, or leaves the scope.
+
+Version **0.1.0** · DSH **>=0.2.2-rc.1** · Node.js **>=22** · MIT. The current interface and report labels are in Simplified Chinese.
+
+> All images use synthetic demo data and the actual plugin React UI in an isolated preview with a host adapter. They are not captures of a live DSH session or customer tests.
+
+## See the whole round
+
+Choose a source version, name the environment and tested version, and work through the case list. Six states keep passed, failed, blocked, deferred, in-progress, and unstarted work visible. Dependency-aware ordering gives the round a starting sequence; you can adjust it as the work develops.
+
+![Regression round overview with the case list, status counts, and selected case](https://raw.githubusercontent.com/lichufeng123/dsh-test-workbench/main/docs/images/01-overview.png)
+
+## Put the evidence beside the step
+
+Record each step's actual observation beside its action and expectation. Paste or drag in screenshots, add captions, and upload them to the case; videos and PDFs are supported too. Files first save as local drafts, so changing pages does not discard the attachment work. Each attachment belongs to a particular execution attempt.
+
+![Step expectations, actual observations, and captioned evidence in the case detail](https://raw.githubusercontent.com/lichufeng123/dsh-test-workbench/main/docs/images/02-evidence.png)
+
+## Retest without losing the first result
+
+Start a new attempt after a fix and keep the earlier failure and its evidence available. If a case leaves the round, record why; restoring it preserves the scope history. The next person can see how the result and the scope changed.
+
+![Execution attempts and recorded scope changes for a test case](https://raw.githubusercontent.com/lichufeng123/dsh-test-workbench/main/docs/images/03-history.png)
+
+## Share the progress you actually have
+
+Generate a local Markdown report at any point. It keeps failures, unfinished work, removed cases, and evidence gaps visible. Each report uses a frozen snapshot, so later testing does not silently rewrite an earlier report. Preview and download work without a model or external publishing service.
+
+![Report jobs and a frozen Markdown preview containing partial test results](https://raw.githubusercontent.com/lichufeng123/dsh-test-workbench/main/docs/images/04-report.png)
 
 ## Install
 
-Install the public source into the DSH profile you actually use:
+Install the published npm package into the DSH CLI profile you use:
 
 ```sh
-dsh plugin --profile web add github:lichufeng123/dsh-test-workbench
+dsh plugin --profile web add dsh-test-workbench@0.1.0
 ```
 
-Replace `web` with your ordinary CLI profile name. A profile named `desktop` uses `--profile desktop`; do not assume that name addresses a desktop application's managed profile. For Desktop-managed profiles, use that application's Plugins installer with `github:lichufeng123/dsh-test-workbench` as the package target.
+Replace `web` with your ordinary CLI profile name. In the Desktop application's custom plugin installer, enter `dsh-test-workbench@0.1.0`; a CLI profile named `desktop` does not address the application's managed profile. The plugin runs inside DSH and needs no separate application server.
 
-Version `0.1.0` is published on [npm](https://www.npmjs.com/package/dsh-test-workbench). Install the released package with:
+Source installation is also available: `dsh plugin --profile web add github:lichufeng123/dsh-test-workbench`.
 
-```sh
-dsh plugin --profile web add dsh-test-workbench
-```
+## Try your first round
 
-Desktop users can enter `dsh-test-workbench@0.1.0` in the application's custom plugin installer. The [community marketplace listing](https://deepseek1024.com/plugins/lichufeng123/dsh-test-workbench) has been accepted; its npm install metadata may refresh separately. The plugin runs inside DSH and does not need a separate application server. Install-time dependencies are resolved by the host's package manager.
-
-## Configure and start
-
-Set the plugin entry in the active profile's Cordis patch. An explicit absolute workspace path is recommended; otherwise `workspaceRoot` defaults to the DSH Host process's current working directory.
+Set `workspaceRoot` to an existing test workspace in the active profile's Cordis patch:
 
 ```yaml
 - id: dsh-test-workbench
   config:
     workspaceRoot: /absolute/path/to/test-project
-    report:
-      enabled: false
 ```
 
-Open **测试执行台** in the sidebar. Import [the synthetic example](examples/cases.json), or paste a JSON case array. The object form accepts `{ "requirement_id": "REQ-DEMO", "title": "Settings", "cases": [...] }`. Supply a requirement ID and title when importing a bare array. A fresh workspace does not require a pre-existing case registry.
+Open **测试执行台** in the sidebar and import the [synthetic example](examples/cases.json), or paste an ordinary JSON object like this. A fresh workspace needs no prior case registry; each import accepts **1–500 cases**.
 
-1. Import cases and select the source version.
-2. Create a round with an environment, tested version, and scope.
-3. Follow the execution order, compare the actual result with the expected result and your independent oracle, and save each case's status.
-4. Add images, videos, or PDFs with captions and optional step bindings. Files first become local drafts; explicitly upload them to attach them to the case.
-5. Generate a local Markdown report preview. Record missing work, failures, and evidence gaps as they stand.
-
-Imports are always provisional or review-pending. An uploaded `approved` flag cannot grant formal baseline authority, and imported execution results do not become completed tests. Case `oracle` / `Oracle`, `oracles`, and `source` JSON metadata are retained for inspection; the workbench does not evaluate or certify those descriptions.
-
-## Features and limits
-
-- Six statuses: not started, in progress, passed, failed, blocked, and deferred. Manual recording is the primary workflow.
-- Dependency-aware ordering, with manual changes and optional AI suggestions. Sorting never executes a test.
-- New execution attempts preserve earlier results and evidence. Removing a case from a round requires a reason; restoration preserves the scope history.
-- Revision checks protect concurrent edits. Evidence drafts survive page changes and are bound to their original execution attempt.
-- Local reports retain partial results, removed cases, and missing evidence. A passed checkbox alone is not a release decision.
-
-AI ordering and summaries reuse the model configured in DSH. When it is available, creating/replanning a round and generating a report can invoke it automatically and send case descriptions or execution records to that model provider. Local report preview works without AI. External report publication currently needs an available DSH model as well as the optional publishing setup below. The plugin does not provide an autonomous browser or API test runner.
-
-## Optional Feishu / Lark publication
-
-Publication is disabled by default. To enable it, install and authenticate `lark-cli` separately using your own user identity, then configure your own identity expectations and report directories:
-
-```yaml
-- id: dsh-test-workbench
-  config:
-    workspaceRoot: /absolute/path/to/test-project
-    report:
-      enabled: true
-      binary: lark-cli
-      expectedUserName: Your Name
-      expectedOpenId: YOUR_OPEN_ID
-      productDirectory: https://example.feishu.cn/wiki/PRODUCT_DIRECTORY
-      historyDirectory: https://example.feishu.cn/wiki/HISTORY_DIRECTORY
+```json
+{
+  "requirement_id": "REQ-DEMO",
+  "title": "Display preferences",
+  "cases": [{
+    "id": "C1",
+    "title": "Keep a saved preference after reload",
+    "steps": [
+      {"action": "Choose comfortable and save", "expected": "Save succeeds"},
+      {"action": "Reload the page", "expected": "Comfortable remains selected"}
+    ],
+    "expected_result": "The saved preference remains comfortable"
+  }]
+}
 ```
 
-Replace every example value. Do not put tokens or passwords in the patch or repository. The publisher calls the CLI as a user, verifies identity and document access, and records directory synchronization. Directory structure and write permission must match the publisher's contract; arbitrary wiki layouts are not automatically understood.
+1. Select the imported source and create a round with its environment, tested version, and scope.
+2. Perform the test, compare the actual behavior with your expectation, and save the status and observations.
+3. Add step evidence, then explicitly upload the saved drafts to attach them to the case.
+4. Open **测试报告** and choose **生成本地预览** to review or download the current snapshot.
 
-If creation or update has an unknown outcome, reconcile the existing report before retrying. A directory update failure remains visible even when the document itself was created. Preview and manual execution remain available when publishing is disabled.
+You can also import a bare case array and fill in its source ID and title in the form. Optional `oracle` / `Oracle`, `oracles`, and `source` fields retain your project's judgment criteria and references as JSON. For example, an oracle might describe the independently prepared record that tells you what the correct saved value should be. The plugin stores these descriptions; it does not execute them or decide whether they prove a result.
 
-## Data and development
+Imported sources remain provisional or pending review. An `approved` field cannot turn an import into an approved baseline, and imported old results do not count as tests completed in the new round. You can use the workbench directly without adopting an upstream testing framework.
 
-Work items, imported sources, execution rounds, evidence, and report jobs are stored under `.ai-test/` in the configured workspace. Browser input drafts also use local storage. Treat both as user data and keep them out of public commits. See [Security](SECURITY.md).
+## AI assistance, with a clear role
 
-```sh
-git clone https://github.com/lichufeng123/dsh-test-workbench.git
-cd dsh-test-workbench
-npm ci --ignore-scripts
-npm test
-npm run check
-npm run validate
-npm pack
-```
+Manual recording is the primary workflow. With an available DSH model, creating or replanning a round and generating a report can automatically invoke that model for ordering or a summary. These calls may send case descriptions or execution records to the configured model provider; there is no separate plugin model setup.
 
-These are the contributor checks, not a claim about a particular test run. See [the contribution guide](CONTRIBUTING.md), [UI design specification](docs/ui-design-spec.md), and [changelog](CHANGELOG.md).
+AI does not generate and run real tests here, change the expected result, or independently judge what is true. Results recorded as AI execution must reference a real execution record from the current run. The plugin itself includes no autonomous browser or business API test runner. Manual execution and local report preview remain usable without a model.
 
-The [MIT License](LICENSE) permits private changes, redistribution, and commercial use with the required copyright and permission notice. A fork can be fixed privately or proposed upstream through a pull request. The official plugin manager follows the package/source you installed; it does not automatically switch users to your fork.
+## Optional publishing and further reading
+
+Feishu / Lark publication is **off by default**. Enable it with your own separately authenticated `lark-cli` user identity and your own report directory configuration. Version 0.1.0 also requires an available DSH model for external publication. See [configuration and publishing recovery](docs/configuration.md).
+
+Execution records, attachment drafts, evidence, and report snapshots live under `.ai-test/` in your configured workspace; input drafts also use browser local storage. Keep this user data out of public commits. Read the [security and data boundaries](SECURITY.md) before importing sensitive material or enabling AI and publishing.
+
+[API reference](docs/API.md) · [Contributing and local checks](CONTRIBUTING.md) · [UI design specification](docs/ui-design-spec.md) · [Changelog](CHANGELOG.md) · [MIT License](LICENSE)
