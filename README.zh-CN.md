@@ -16,13 +16,13 @@ dsh plugin --profile web add github:lichufeng123/dsh-test-workbench
 
 将 `web` 换成自己的普通 CLI profile 名称。普通 profile 确实叫 `desktop` 时可用 `--profile desktop`；这不代表桌面应用内部管理的 profile。桌面应用请通过其插件安装器填写 `github:lichufeng123/dsh-test-workbench`。
 
-计划使用的公开 npm 包名为 `dsh-test-workbench`。版本发布到 npm 后可用：
+`0.1.0` 已发布到 [npm](https://www.npmjs.com/package/dsh-test-workbench)，可安装正式包：
 
 ```sh
 dsh plugin --profile web add dsh-test-workbench
 ```
 
-本文不表示 npm 已发布或市场已审核收录。插件运行在 DSH 内，无须另起应用服务器；安装依赖由宿主包管理器解析。
+桌面应用可在自定义插件安装入口填写 `dsh-test-workbench@0.1.0`。[社区插件市场](https://deepseek1024.com/plugins/lichufeng123/dsh-test-workbench)已审核收录；市场的 npm 安装元数据可能稍后刷新。插件运行在 DSH 内，无须另起应用服务器；安装依赖由宿主包管理器解析。
 
 ## 配置与开始使用
 

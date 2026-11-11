@@ -16,13 +16,13 @@ dsh plugin --profile web add github:lichufeng123/dsh-test-workbench
 
 Replace `web` with your ordinary CLI profile name. A profile named `desktop` uses `--profile desktop`; do not assume that name addresses a desktop application's managed profile. For Desktop-managed profiles, use that application's Plugins installer with `github:lichufeng123/dsh-test-workbench` as the package target.
 
-The intended public npm package name is `dsh-test-workbench`. Once a version is published to npm, the equivalent command is:
+Version `0.1.0` is published on [npm](https://www.npmjs.com/package/dsh-test-workbench). Install the released package with:
 
 ```sh
 dsh plugin --profile web add dsh-test-workbench
 ```
 
-This README does not assert that npm publication or marketplace review has completed. The plugin runs inside DSH; it does not need a separate application server. Install-time dependencies are resolved by the host's package manager.
+Desktop users can enter `dsh-test-workbench@0.1.0` in the application's custom plugin installer. The [community marketplace listing](https://deepseek1024.com/plugins/lichufeng123/dsh-test-workbench) has been accepted; its npm install metadata may refresh separately. The plugin runs inside DSH and does not need a separate application server. Install-time dependencies are resolved by the host's package manager.
 
 ## Configure and start
 
